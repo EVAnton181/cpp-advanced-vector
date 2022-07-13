@@ -318,8 +318,10 @@ void Vector<T>::PushBack(T1&& value) {
 
 template <typename T>
 void Vector<T>::PopBack() /* noexcept */ {
-  std::destroy_n(data_ + size_ - 1, 1);
-  --size_;	
+  if (size_ > 0) {
+	std::destroy_n(data_ + size_ - 1, 1);
+	--size_;
+  }
 }
 
 template <typename T>
@@ -353,6 +355,7 @@ size_t Vector<T>::Capacity() const noexcept {
 template <typename T>
 template <typename... Args>
 T* Vector<T>::Emplace(const_iterator pos, Args&&... args) {
+  assert(pos >= begin() && pos <= end());
   size_t offset = pos - cbegin();
   if (size_ == Capacity()) {
 	EmplaceWithRealoc(offset, std::forward<Args>(args)...);
@@ -368,6 +371,7 @@ T* Vector<T>::Emplace(const_iterator pos, Args&&... args) {
 // Как вне тела класса воспользоваться iterator???
 template <typename T>
 T* Vector<T>::Erase(const_iterator pos) {
+  assert(pos >= begin() && pos < end());
   size_t iter = pos - cbegin();
   size_t offset = pos - cbegin();
   if (pos != end()-1) {
