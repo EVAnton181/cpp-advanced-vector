@@ -210,7 +210,7 @@ Vector<T>::Vector(const Vector& other)
 template <typename T>
 Vector<T>::Vector(Vector&& other) noexcept 
   : data_()
-  , size_()  //
+  , size_()
 {
   Swap(other);
 }
